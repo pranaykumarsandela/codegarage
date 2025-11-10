@@ -12,8 +12,10 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <div className="navbar-logo-icon">⚡</div>
-          <span className="navbar-logo-text">Code Garage</span>
+          <div className="navbar-logo-icon">
+            <img src="/ieee-cs-logo.png" alt="IEEE CS Logo" className="logo-image" />
+          </div>
+          
         </Link>
         <button
           className={`navbar-toggle ${isOpen ? 'active' : ''}`}
