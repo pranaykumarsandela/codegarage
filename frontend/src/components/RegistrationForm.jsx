@@ -1,195 +1,245 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { validateForm } from '../utils/formValidation';
-import '../styles/forms.css';
-import '../styles/buttons.css';
+import { useState } from "react";
 
 function RegistrationForm() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    institution: '',
-    language: '',
-    pricingTier: 'early-bird'
+  const [step, setStep] = useState(1);
+
+  const [done, setDone] = useState({
+    1: false,
+    2: false,
+    3: false,
   });
 
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [data, setData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    year: "",
+    department: "",
+    rollno: "",
+    plan: "",
+  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+  const handle = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // VALIDATIONS
+  const valid1 = data.name && data.phone && data.email;
+  const valid2 = data.year && data.department && data.rollno;
 
-    const validation = validateForm(formData);
+  const next = () => {
+    if (step === 1 && valid1) setDone((d) => ({ ...d, 1: true }));
+    if (step === 2 && valid2) setDone((d) => ({ ...d, 2: true }));
 
-    if (!validation.isValid) {
-      setErrors(validation.errors);
-      return;
-    }
+    if ((step === 1 && !valid1) || (step === 2 && !valid2)) return;
 
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      navigate('/payment', { state: { formData } });
-    }, 1000);
+    setStep(step + 1);
   };
+
+  const back = () => setStep(step - 1);
+
+  // PROGRESS LINE FILL (0%, 50%, 100%)
+  const progress =
+    done[1] && done[2] && done[3]
+      ? "100%"
+      : done[1] && done[2]
+      ? "66%"
+      : done[1]
+      ? "33%"
+      : "0%";
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form-info-box">
-        <div className="form-info-title">Registration Information</div>
-        <div className="form-info-text">
-          Fill in your details to register for Code Garage 2025. All fields are required.
+    <form>
+
+      {/* ---------- STEPS + PROGRESS LINE ---------- */}
+      <div className="steps-wrapper">
+
+        {/* BACKGROUND LINE */}
+        <div className="steps-line"></div>
+
+        {/* PROGRESS FILL LINE */}
+        <div className="steps-progress" style={{ width: progress }}></div>
+
+        {/* DOTS */}
+        <div className="steps-bar">
+          {[1, 2, 3].map((n) => (
+            <div
+              key={n}
+              className={`step-dot ${step === n ? "active" : ""} ${
+                done[n] ? "done" : ""
+              }`}
+            >
+              {done[n] ? "✓" : n}
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="name" className="form-label">Full Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          className="form-input"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Enter your full name"
-        />
-        {errors.name && <div className="form-error">{errors.name}</div>}
-      </div>
 
-      <div className="form-group">
-        <label htmlFor="email" className="form-label">Email Address</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          className="form-input"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="your.email@example.com"
-        />
-        {errors.email && <div className="form-error">{errors.email}</div>}
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="phone" className="form-label">Phone Number</label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          className="form-input"
-          value={formData.phone}
-          onChange={handleChange}
-          placeholder="10-digit mobile number"
-          maxLength="10"
-        />
-        {errors.phone && <div className="form-error">{errors.phone}</div>}
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="institution" className="form-label">Institution</label>
-        <input
-          type="text"
-          id="institution"
-          name="institution"
-          className="form-input"
-          value={formData.institution}
-          onChange={handleChange}
-          placeholder="Your college or university name"
-        />
-        {errors.institution && <div className="form-error">{errors.institution}</div>}
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="language" className="form-label">Preferred Programming Language</label>
-        <select
-          id="language"
-          name="language"
-          className="form-select"
-          value={formData.language}
-          onChange={handleChange}
-        >
-          <option value="">Select a language</option>
-          <option value="java">Java</option>
-          <option value="python">Python</option>
-          <option value="cpp">C++</option>
-        </select>
-        {errors.language && <div className="form-error">{errors.language}</div>}
-      </div>
-
-      <div className="form-divider"></div>
-
-      <div className="form-group">
-        <label className="form-label">Pricing Tier</label>
-        <div className="form-radio-group">
-          <div
-            className={`form-radio-item ${formData.pricingTier === 'early-bird' ? 'selected' : ''}`}
-            onClick={() => setFormData(prev => ({ ...prev, pricingTier: 'early-bird' }))}
-          >
+      {/* STEP 1 */}
+      {step === 1 && (
+        <div className="fade">
+          <div className="form-group">
+            <label className="form-label">Full Name</label>
             <input
-              type="radio"
-              id="early-bird"
-              name="pricingTier"
-              value="early-bird"
-              checked={formData.pricingTier === 'early-bird'}
-              onChange={handleChange}
-              className="form-radio-input"
+              className="form-input"
+              name="name"
+              value={data.name}
+              onChange={handle}
+              placeholder="Enter your name"
             />
-            <label htmlFor="early-bird" className="form-radio-label">
-              <div style={{ fontWeight: 600 }}>Early Bird - ₹149</div>
-              <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                Limited time offer
-              </div>
-            </label>
           </div>
 
-          <div
-            className={`form-radio-item ${formData.pricingTier === 'regular' ? 'selected' : ''}`}
-            onClick={() => setFormData(prev => ({ ...prev, pricingTier: 'regular' }))}
-          >
+          <div className="form-group">
+            <label className="form-label">Phone Number</label>
             <input
-              type="radio"
-              id="regular"
-              name="pricingTier"
-              value="regular"
-              checked={formData.pricingTier === 'regular'}
-              onChange={handleChange}
-              className="form-radio-input"
+              className="form-input"
+              name="phone"
+              value={data.phone}
+              onChange={handle}
+              placeholder="9876543210"
             />
-            <label htmlFor="regular" className="form-radio-label">
-              <div style={{ fontWeight: 600 }}>Regular - ₹249</div>
-              <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                Standard pricing
-              </div>
-            </label>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input
+              className="form-input"
+              name="email"
+              value={data.email}
+              onChange={handle}
+              placeholder="yourname@gmail.com"
+            />
+          </div>
+
+          <button
+            type="button"
+            disabled={!valid1}
+            onClick={next}
+            className="btn-primary full"
+          >
+            Next →
+          </button>
+        </div>
+      )}
+
+      {/* STEP 2 */}
+      {step === 2 && (
+        <div className="fade">
+          <div className="form-group">
+            <label className="form-label">Year</label>
+            <select
+              className="form-select"
+              name="year"
+              value={data.year}
+              onChange={handle}
+            >
+              <option value="">Select</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Department</label>
+            <select
+              className="form-select"
+              name="department"
+              value={data.department}
+              onChange={handle}
+            >
+              <option value="">Select</option>
+              <option value="CSE">CSE</option>
+              <option value="AIML">AIML</option>
+              <option value="ECE">ECE</option>
+              <option value="EEE">EEE</option>
+              <option value="MECH">MECH</option>
+              <option value="CIVIL">CIVIL</option>
+              <option value="MINING">MINING</option>
+              <option value="BME">BME</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Roll No</label>
+            <input
+              className="form-input"
+              name="rollno"
+              value={data.rollno}
+              onChange={handle}
+            />
+          </div>
+
+          <div className="form-actions">
+            <button type="button" onClick={back} className="btn-secondary">
+              ← Back
+            </button>
+            <button
+              type="button"
+              disabled={!valid2}
+              onClick={next}
+              className="btn-primary"
+            >
+              Next →
+            </button>
           </div>
         </div>
-      </div>
+      )}
 
-      <div className="form-actions">
-        <button
-          type="submit"
-          className={`btn btn-primary btn-large btn-full ${isSubmitting ? 'btn-loading' : ''}`}
-          disabled={isSubmitting}
-        >
-          <span>{isSubmitting ? 'Processing...' : 'Proceed to Payment'}</span>
-        </button>
-      </div>
+      {/* STEP 3 */}
+      {step === 3 && (
+        <div className="fade">
+
+          <div className="form-group">
+            <label className="form-label">Choose Pricing</label>
+
+            <div className="plan-buttons">
+
+              <button
+                type="button"
+                className={`plan-btn ${data.plan === "early" ? "active" : ""}`}
+                onClick={() => setData({ ...data, plan: "early" })}
+              >
+                Early Bird — ₹149
+              </button>
+
+              <button
+                type="button"
+                className={`plan-btn ${data.plan === "regular" ? "active" : ""}`}
+                onClick={() => setData({ ...data, plan: "regular" })}
+              >
+                Regular — ₹249
+              </button>
+
+            </div>
+          </div>
+
+          <div className="form-actions">
+            <button type="button" className="btn-secondary" onClick={back}>
+              ← Back
+            </button>
+
+            <button
+              type="button"
+              className="btn-primary"
+              disabled={!data.plan}
+              onClick={() => {
+                setDone((d) => ({ ...d, 3: true }));
+
+                const amount = data.plan === "early" ? 149 : 249;
+                const upiUrl = `upi://pay?pa=YOUR-UPI-ID&pn=Code Garage&am=${amount}&cu=INR`;
+
+                window.location.href = upiUrl;
+              }}
+            >
+              Pay Now →
+            </button>
+          </div>
+        </div>
+      )}
+
     </form>
   );
 }

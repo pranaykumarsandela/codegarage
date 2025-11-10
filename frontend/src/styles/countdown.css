@@ -35,7 +35,7 @@
 }
 
 .countdown-label {
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 600;
   margin-bottom: var(--spacing-md);
   display: flex;
@@ -166,5 +166,65 @@
 
   .countdown-timer {
     gap: var(--spacing-sm);
+  }
+}
+@media (max-width: 768px) {
+
+  .countdown-section {
+    padding: var(--spacing-lg) 0;
+  }
+
+  .countdown-container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+  }
+
+  .countdown-card {
+    padding: 1.8rem; /* Bigger padding for larger look */
+  }
+
+  .countdown-label {
+    font-size: 1.4rem; /* Title bigger */
+    margin-bottom: 1rem;
+  }
+
+  .countdown-badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+  }
+
+  .countdown-timer {
+    gap: 0.3rem;
+  }
+
+  .time-unit {
+    min-width: 0rem; /* Bigger boxes */
+  }
+
+  .time-value {
+    font-size: 2rem;        /* ✨ BIGGER COUNTDOWN NUMBERS */
+    font-weight: 800;
+    text-shadow: 0 0 22px rgba(168, 85, 247, 0.5);
+  }
+
+  .time-label {
+    font-size: 0.3rem; /* bring back label but subtle */
+    margin-top: 0.3rem;
+  }
+
+  .countdown-divider {
+    font-size: 2rem; /* Bigger dots between timers */
+  }
+
+  .countdown-info {
+    font-size: 1rem; /* Slightly bigger text */
+    margin-top: 1rem;
+  }
+
+  .countdown-price {
+    font-size: 1.5rem; /* Bigger price tag */
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
   }
 }
