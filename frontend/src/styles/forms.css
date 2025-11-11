@@ -1,74 +1,189 @@
-/* ========= CENTER FORM ========= */
+/* ================================================
+   FORM CONTAINER
+================================================ */
+/* Smooth fade + slide animation for page entry */
+.form-enter {
+  opacity: 0;
+  transform: translateY(25px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.form-enter.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .form-container.centered {
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 2rem;
-}
-
-/* CARD */
-.form-card {
   width: 100%;
-  max-width: 500px;
-  padding: 1.7rem;
-  border-radius: 20px;
-  max-height: 85vh;
-  overflow-y: auto;
-}
-
-/* ---------- STEP BAR WITH LINE ---------- */
-.steps-wrapper {
-  position: relative;
-  margin-bottom: 2rem;
-  padding: 0 10px;
-}
-
-.steps-line {
-  position: absolute;
-  top: 50%;
-  left: 25px;
-  right: 25px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.15);
-  z-index: 0;
-}
-
-.steps-bar {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  z-index: 2;
-}
-
-/* Circles */
-.step-dot {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  border: 2px solid var(--glass-border);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--text-secondary);
+  padding: 0.9rem 1rem;
+}
+
+/* ================================================
+   FORM CARD
+================================================ */
+.form-card {
+  width: 100%;
+  max-width: 600px;
+  padding: 2.2rem;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px);
+  overflow-y: auto;
+  box-shadow: 0 0 30px rgba(0,0,0,0.3);
+}
+
+/* ================================================
+   HEADING (top)
+================================================ */
+.form-top-heading {
+  text-align: center;
+  margin-bottom: 2.4rem;
+}
+
+.form-top-heading h2 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+/* ================================================
+   STEPS WRAPPER
+================================================ */
+.steps-wrapper {
+  position: relative;
+  margin: 2rem 0 3rem 0;
+  padding: 0 30px;   /* desktop left/right */
+}
+
+/* LINE (background) */
+.steps-line {
+  position: absolute;
+  top: 50%;
+  left: 60px;       /* desktop line offset */
+  right: 60px;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  transform: translateY(-50%);
+}
+
+/* PROGRESS */
+.steps-progress {
+  position: absolute;
+  top: 50%;
+  left: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
+  border-radius: 4px;
+  transform: translateY(-50%);
+  transition: width 0.4s ease;
+  z-index: 2;
+}
+
+/* DOTS */
+.steps-bar {
+  display: flex;
+  justify-content: space-between;
+  z-index: 4;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.step-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: 600;
-  transition: 0.25s ease;
+  color: var(--text-secondary);
+  transition: 0.25s;
 }
 
 .step-dot.active {
   background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
-  color: white;
   border-color: transparent;
+  color: #fff;
 }
 
 .step-dot.done {
   background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
-  color: white;
   border-color: transparent;
+  color: #fff;
 }
 
-/* ---------- PRICING BUTTONS ---------- */
+/* ================================================
+   INPUTS
+================================================ */
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: var(--neon-cyan);
+  background: rgba(255,255,255,0.1);
+}
+
+/* ================================================
+   BUTTONS
+================================================ */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 1rem;
+  width: 100%;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
+  border: none;
+  color: white;
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+}
+
+/* ================================================
+   PLAN BUTTONS
+================================================ */
 .plan-buttons {
   display: flex;
   flex-direction: column;
@@ -82,148 +197,56 @@
   background: rgba(255,255,255,0.05);
   color: white;
   font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.plan-btn:hover {
-  border-color: var(--neon-purple);
-  background: rgba(255,255,255,0.1);
+  transition: 0.3s;
 }
 
 .plan-btn.active {
   background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
-  color: white;
   border-color: transparent;
   box-shadow: 0 0 18px rgba(168,85,247,0.4);
 }
 
-/* INPUTS */
-.form-group {
-  margin-bottom: 1.2rem;
-}
-
-.form-input,
-.form-select {
-  width: 100%;
-  padding: 0.9rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid var(--glass-border);
-  color: white;
-}
-
-/* BUTTONS */
-.btn-primary {
-  background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
-  color: white;
-  padding: 1rem;
-  border-radius: 12px;
-  width: 100%;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-secondary {
-  padding: 1rem;
-  width: 100%;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--glass-border);
-  color: white;
-}
-
-/* FLEX BUTTONS */
-.form-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-/* MOBILE OPTIMIZATION */
+/* ================================================
+   MOBILE FIX — PERFECT DOT + LINE CENTERING
+================================================ */
 @media (max-width: 768px) {
+
+  body, html {
+    overflow-x: hidden !important;
+  }
+
   .form-card {
-    padding: 1.3rem;
-    max-height: 82vh;
+    max-height: 80vh;       /* reduced height */
+    margin: 10px 1px;           /* little gap from screen edges */
+    padding: 1.4rem;
+  }
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+  .steps-wrapper {
+    padding: 0 16px;
+    margin-top: 1.6rem;
+    margin-bottom: 2.4rem;
+  }
+
+  /* PERFECT line centering for 32px dots */
+  .steps-line,
+  .steps-progress {
+    left: 38px !important;
+    right: 38px !important;
   }
 
   .step-dot {
-    width: 32px;
-    height: 32px;
-    font-size: 0.8rem;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.75rem;
   }
-
-  .steps-wrapper {
-    margin-bottom: 1.5rem;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-}
-/* ========== STEP BAR + LINES ========== */
-.steps-wrapper {
-  position: relative;
-  margin-bottom: 2rem;
-  padding: 0 20px;
-}
-
-/* BACKGROUND LINE */
-.steps-line {
-  position: absolute;
-  top: 50%;
-  left: 40px;
-  right: 40px;
-  height: 4px;
-  background: rgba(255,255,255,0.15);
-  transform: translateY(-50%);
-  border-radius: 4px;
-}
-
-/* PROGRESS COLOR LINE */
-.steps-progress {
-  position: absolute;
-  top: 50%;
-  left: 40px;
-  height: 4px;
-  background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
-  transform: translateY(-50%);
-  border-radius: 4px;
-  transition: width 0.4s ease;
-  z-index: 1;
-}
-
-/* DOTS */
-.steps-bar {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  z-index: 2;
-}
-
-.step-dot {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  border: 2px solid rgba(255,255,255,0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--text-secondary);
-  font-weight: 600;
-  transition: 0.25s ease;
-  z-index: 5;
-}
-
-.step-dot.active {
-  background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
-  border-color: transparent;
-  color: #fff;
-}
-
-.step-dot.done {
-  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
-  border-color: transparent;
-  color: #fff;
 }
