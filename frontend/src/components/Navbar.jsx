@@ -13,10 +13,23 @@ const Navbar = () => {
       <div className="navbar-container">
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
           <div className="navbar-logo-icon">
-            <img src="/ieee-cs-logo.png" alt="IEEE CS Logo" className="logo-image" />
+            <img src="/image.png" alt="IEEE CS Logo" className="logo-image" />
           </div>
-          
+          <span className="navbar-logo-text">Code Garage</span>
         </Link>
+        
+        <div className={`navbar-nav ${isOpen ? 'active' : ''}`}>
+          <Link to="/" className="navbar-link" onClick={closeMenu}>
+            Home
+          </Link>
+          <Link to="/register" className="navbar-link" onClick={closeMenu}>
+            Register
+          </Link>
+          <Link to="/register" className="btn btn-yellow btn-small" onClick={closeMenu}>
+            Get Started
+          </Link>
+        </div>
+
         <button
           className={`navbar-toggle ${isOpen ? 'active' : ''}`}
           onClick={toggleMenu}
@@ -26,17 +39,6 @@ const Navbar = () => {
           <span className="navbar-toggle-bar"></span>
           <span className="navbar-toggle-bar"></span>
         </button>
-        <div className={`navbar-nav ${isOpen ? 'active' : ''}`}>
-          <Link to="/" className="navbar-link" onClick={closeMenu}>
-            Home
-          </Link>
-          <Link to="/register" className="navbar-link" onClick={closeMenu}>
-            Register
-          </Link>
-          <Link to="/register" className="btn btn-primary btn-small" onClick={closeMenu}>
-            Get Started
-          </Link>
-        </div>
       </div>
     </nav>
   );
