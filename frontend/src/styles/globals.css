@@ -302,3 +302,29 @@ body {
   font-size: 0.8rem;
   font-weight: 600;
 }
+/* Light Yellow Button */
+.btn-light-yellow {
+  background: #FFFBEB;
+  color: #000;
+  border: 2px solid #FEF3C7;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-light-yellow:hover {
+  background: #FEF3C7;
+  border-color: #FDE68A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(254, 243, 199, 0.4);
+}
+
+/* If you have btn-large class */
+.btn-large {
+  padding: 14px 28px;
+  font-size: 1.1rem;
+}
