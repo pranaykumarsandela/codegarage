@@ -15,7 +15,7 @@ const Navbar = () => {
           <div className="navbar-logo-icon">
             <img src="/ieee-cs-logo.png" alt="IEEE CS Logo" className="logo-image" />
           </div>
-          
+          <span className="navbar-logo-text">IEEE CS OUCE</span>
         </Link>
         <button
           className={`navbar-toggle ${isOpen ? 'active' : ''}`}
