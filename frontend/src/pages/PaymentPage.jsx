@@ -13,10 +13,28 @@ function PaymentPage() {
   const openConfirm = () => setShowModal(true);
   const closeConfirm = () => setShowModal(false);
 
-  const confirmPayment = () => {
-    setShowModal(false);
-    setTimeout(() => setShowSuccess(true), 300);
-  };
+  const confirmPayment = async () => {
+  setShowModal(false);
+
+  try {
+    await fetch("https://script.google.com/macros/s/AKfycbxMz5WSrYOnT4Z2P5dhBUebIj7C4qRZYb_j_VtbSaeYzDQOqmJunO4UbvqogcNHrDho-w/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "updatePayment",
+        code: code,
+      }),
+    });
+
+    console.log("✅ Payment status updated for code:", code);
+  } catch (err) {
+    console.error("❌ Error updating payment status:", err);
+  }
+
+  // Show success animation after update
+  setTimeout(() => setShowSuccess(true), 300);
+};
+
 
   return (
     <div

@@ -224,6 +224,21 @@
 .form-group {
   margin-bottom: 1rem;
 }
+.form-input.invalid {
+  border: 1.5px solid #ef4444;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 2px;
+  display: block;
+}
+
+.btn-primary.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 
 .form-label {
   display: block;

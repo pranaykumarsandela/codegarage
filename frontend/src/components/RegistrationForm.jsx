@@ -2,13 +2,8 @@ import { useState } from "react";
 
 function RegistrationForm() {
   const [step, setStep] = useState(1);
-
-  const [done, setDone] = useState({
-    1: false,
-    2: false,
-    3: false,
-    4: false,
-  });
+  const [done, setDone] = useState({ 1: false, 2: false, 3: false, 4: false });
+  const [errors, setErrors] = useState({});
 
   const [data, setData] = useState({
     name: "",
@@ -25,13 +20,78 @@ function RegistrationForm() {
   });
 
   const handle = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+    validate(name, value);
   };
 
-  // VALIDATIONS
-  const valid1 = data.name && data.phone && data.email;
-  const valid2 = data.year && data.department && data.rollno;
-  const valid3 = data.discord && data.leetcode && data.github && data.skill;
+  // ✅ Validation rules
+  const validate = (field, value) => {
+    let message = "";
+
+    switch (field) {
+      case "name":
+        if (!/^[A-Za-z\s]{3,}$/.test(value))
+          message = "Enter a valid name (min 3 letters)";
+        break;
+
+      case "phone":
+        if (!/^\d{10}$/.test(value))
+          message = "Phone number must be 10 digits";
+        break;
+
+      case "email":
+        if (
+          !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+        )
+          message = "Enter a valid email address";
+        break;
+
+      case "rollno":
+  if (!/^[A-Za-z0-9]{13}$/.test(value))
+    message = "Roll number must be exactly 12 characters (letters/numbers)";
+  break;
+
+
+      case "discord":
+        if (value.length < 3) message = "Enter a valid Discord username or ID";
+        break;
+
+      case "leetcode":
+        if (value.length < 3) message = "Enter a valid LeetCode username";
+        break;
+
+      case "github":
+        if (value.length < 3) message = "Enter a valid GitHub username";
+        break;
+
+      default:
+        message = "";
+    }
+
+    setErrors((prev) => ({ ...prev, [field]: message }));
+  };
+
+  // ✅ Validation checks per step
+  const valid1 =
+    data.name &&
+    data.phone &&
+    data.email &&
+    !errors.name &&
+    !errors.phone &&
+    !errors.email;
+
+  const valid2 =
+    data.year && data.department && data.rollno && !errors.rollno;
+
+  const valid3 =
+    data.discord &&
+    data.leetcode &&
+    data.github &&
+    data.skill &&
+    !errors.discord &&
+    !errors.leetcode &&
+    !errors.github;
 
   const next = () => {
     if (step === 1 && valid1) setDone((d) => ({ ...d, 1: true }));
@@ -50,7 +110,6 @@ function RegistrationForm() {
 
   const back = () => setStep(step - 1);
 
-  // PROGRESS LINE FILL (0%, 33%, 66%, 100%)
   const progress =
     done[1] && done[2] && done[3] && done[4]
       ? "100%"
@@ -64,8 +123,7 @@ function RegistrationForm() {
 
   return (
     <form>
-
-      {/* STEPS + PROGRESS */}
+      {/* Progress Bar */}
       <div className="steps-wrapper">
         <div className="steps-line"></div>
         <div className="steps-progress" style={{ width: progress }}></div>
@@ -88,43 +146,46 @@ function RegistrationForm() {
       {step === 1 && (
         <div className="fade">
           <div className="form-group">
-            <label className="form-label">Full Name</label>
+            <label>Full Name</label>
             <input
-              className="form-input"
+              className={`form-input ${errors.name ? "invalid" : ""}`}
               name="name"
               value={data.name}
               onChange={handle}
               placeholder="Enter your name"
             />
+            {errors.name && <small className="error">{errors.name}</small>}
           </div>
 
           <div className="form-group">
-            <label className="form-label">Phone Number</label>
+            <label>Phone Number</label>
             <input
-              className="form-input"
+              className={`form-input ${errors.phone ? "invalid" : ""}`}
               name="phone"
               value={data.phone}
               onChange={handle}
               placeholder="9876543210"
             />
+            {errors.phone && <small className="error">{errors.phone}</small>}
           </div>
 
           <div className="form-group">
-            <label className="form-label">Email</label>
+            <label>Email</label>
             <input
-              className="form-input"
+              className={`form-input ${errors.email ? "invalid" : ""}`}
               name="email"
               value={data.email}
               onChange={handle}
               placeholder="yourname@gmail.com"
             />
+            {errors.email && <small className="error">{errors.email}</small>}
           </div>
 
           <button
             type="button"
             disabled={!valid1}
             onClick={next}
-            className="btn-primary full"
+            className={`btn-primary full ${!valid1 ? "disabled" : ""}`}
           >
             Next →
           </button>
@@ -135,7 +196,7 @@ function RegistrationForm() {
       {step === 2 && (
         <div className="fade">
           <div className="form-group">
-            <label className="form-label">Year</label>
+            <label>Year</label>
             <select
               className="form-select"
               name="year"
@@ -151,7 +212,7 @@ function RegistrationForm() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Department</label>
+            <label>Department</label>
             <select
               className="form-select"
               name="department"
@@ -171,13 +232,14 @@ function RegistrationForm() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Roll No</label>
+            <label>Roll No</label>
             <input
-              className="form-input"
+              className={`form-input ${errors.rollno ? "invalid" : ""}`}
               name="rollno"
               value={data.rollno}
               onChange={handle}
             />
+            {errors.rollno && <small className="error">{errors.rollno}</small>}
           </div>
 
           <div className="form-actions">
@@ -188,7 +250,7 @@ function RegistrationForm() {
               type="button"
               disabled={!valid2}
               onClick={next}
-              className="btn-primary"
+              className={`btn-primary ${!valid2 ? "disabled" : ""}`}
             >
               Next →
             </button>
@@ -196,41 +258,53 @@ function RegistrationForm() {
         </div>
       )}
 
-      {/* STEP 3 (NEW LINKS + SKILL LEVEL) */}
+      {/* STEP 3 */}
       {step === 3 && (
         <div className="fade">
           <div className="form-group">
-            <label className="form-label">Discord Profile Link</label>
+            <label>Discord ID</label>
             <input
-              className="form-input"
+              className={`form-input ${errors.discord ? "invalid" : ""}`}
               name="discord"
               value={data.discord}
               onChange={handle}
+              placeholder="alex_123_"
             />
+            {errors.discord && (
+              <small className="error">{errors.discord}</small>
+            )}
           </div>
 
           <div className="form-group">
-            <label className="form-label">LeetCode Profile Link</label>
+            <label>LeetCode Username</label>
             <input
-              className="form-input"
+              className={`form-input ${errors.leetcode ? "invalid" : ""}`}
               name="leetcode"
               value={data.leetcode}
               onChange={handle}
+              placeholder="alexleetcode"
             />
+            {errors.leetcode && (
+              <small className="error">{errors.leetcode}</small>
+            )}
           </div>
 
           <div className="form-group">
-            <label className="form-label">GitHub Profile Link</label>
+            <label>GitHub Username</label>
             <input
-              className="form-input"
+              className={`form-input ${errors.github ? "invalid" : ""}`}
               name="github"
               value={data.github}
               onChange={handle}
+              placeholder="alexgithub"
             />
+            {errors.github && (
+              <small className="error">{errors.github}</small>
+            )}
           </div>
 
           <div className="form-group">
-            <label className="form-label">Skill Level</label>
+            <label>Skill Level</label>
             <select
               className="form-select"
               name="skill"
@@ -250,9 +324,9 @@ function RegistrationForm() {
             </button>
             <button
               type="button"
-              onClick={next}
               disabled={!valid3}
-              className="btn-primary"
+              onClick={next}
+              className={`btn-primary ${!valid3 ? "disabled" : ""}`}
             >
               Next →
             </button>
@@ -260,13 +334,11 @@ function RegistrationForm() {
         </div>
       )}
 
-      {/* STEP 4 (PRICING) */}
+      {/* STEP 4 */}
       {step === 4 && (
         <div className="fade">
-
           <div className="form-group">
-            <label className="form-label">Choose Pricing</label>
-
+            <label>Choose Pricing</label>
             <div className="plan-buttons">
               <button
                 type="button"
@@ -275,10 +347,11 @@ function RegistrationForm() {
               >
                 Early Bird — ₹149
               </button>
-
               <button
                 type="button"
-                className={`plan-btn ${data.plan === "regular" ? "active" : ""}`}
+                className={`plan-btn ${
+                  data.plan === "regular" ? "active" : ""
+                }`}
                 onClick={() => setData({ ...data, plan: "regular" })}
               >
                 Regular — ₹249
@@ -293,28 +366,37 @@ function RegistrationForm() {
 
             <button
               type="button"
-              className="btn-primary"
+              className={`btn-primary ${!data.plan ? "disabled" : ""}`}
               disabled={!data.plan}
-              onClick={() => {
+              onClick={async () => {
                 setDone((d) => ({ ...d, 4: true }));
-
                 const amount = data.plan === "early" ? 149 : 249;
                 const code = Math.floor(1000 + Math.random() * 9000);
 
                 const payload = {
                   ...data,
-                  plan: amount, // overwrite plan with price in sheet
-                  amount: amount,
-                  code: code,
+                  discord: `https://discord.com/users/${data.discord}`,
+                  leetcode: `https://leetcode.com/${data.leetcode}`,
+                  github: `https://github.com/${data.github}`,
+                  plan: data.plan,
+                  amount,
+                  code,
                 };
 
-                fetch(
-                  "https://script.google.com/macros/s/AKfycby2sJJhDR2ZKPHreQ28WME0GEXFjI4Q30EeTRBwUe-1j8SUBGfFW7p24kxcQRCu_288ug/exec",
-                  {
-                    method: "POST",
-                    body: JSON.stringify(payload),
-                  }
-                );
+                try {
+                  await fetch(
+                    "https://script.google.com/macros/s/AKfycbxMz5WSrYOnT4Z2P5dhBUebIj7C4qRZYb_j_VtbSaeYzDQOqmJunO4UbvqogcNHrDho-w/exec",
+                    {
+                      method: "POST",
+                      mode: "no-cors",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(payload),
+                    }
+                  );
+                  console.log("✅ Data sent:", payload);
+                } catch (error) {
+                  console.error("❌ Error sending data:", error);
+                }
 
                 window.location.href = `/payment?amount=${amount}&code=${code}`;
               }}
