@@ -1,40 +1,69 @@
-import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { EARLY_BIRD_END_DATE } from "../config/eventConfig";
 import SuccessAnimation from "../components/SuccessAnimation";
 
 function PaymentPage() {
-  const [params] = useSearchParams();
-  const amount = params.get("amount");
-  const code = params.get("code");
-
   const [showModal, setShowModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [transactionId, setTransactionId] = useState("");
+  const [isEarlyBird, setIsEarlyBird] = useState(true);
+  const [amount, setAmount] = useState(149);
+
+  useEffect(() => {
+    const now = new Date();
+    const early = now < EARLY_BIRD_END_DATE;
+    setIsEarlyBird(early);
+    setAmount(early ? 149 : 249);
+  }, []);
 
   const openConfirm = () => setShowModal(true);
   const closeConfirm = () => setShowModal(false);
 
   const confirmPayment = async () => {
-  setShowModal(false);
+    if (!/^[A-Za-z0-9]{6,20}$/.test(transactionId.trim())) {
+      alert("Please enter a valid UPI Transaction ID");
+      return;
+    }
 
-  try {
-    await fetch("https://script.google.com/macros/s/AKfycbxMz5WSrYOnT4Z2P5dhBUebIj7C4qRZYb_j_VtbSaeYzDQOqmJunO4UbvqogcNHrDho-w/exec", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "updatePayment",
-        code: code,
-      }),
-    });
+    setShowModal(false);
 
-    console.log("✅ Payment status updated for code:", code);
-  } catch (err) {
-    console.error("❌ Error updating payment status:", err);
-  }
+    const payload = {
+      ...JSON.parse(localStorage.getItem("registrationData")),
+      transactionId,
+    };
 
-  // Show success animation after update
-  setTimeout(() => setShowSuccess(true), 300);
-};
+    try {
+      // Send as application/x-www-form-urlencoded to avoid CORS preflight
+      // Avoiding custom headers prevents the browser from sending an OPTIONS preflight
+      // which many Apps Script web apps don't respond to with CORS headers.
+      const formBody = new URLSearchParams();
+      Object.entries(payload).forEach(([k, v]) => {
+        formBody.append(k, v == null ? "" : String(v));
+      });
 
+      const res = await fetch(
+        "https://script.google.com/macros/s/AKfycbzAribFfpDf9WhPTFAIRMI6B3oideI8yMIuPKfMR7U-Gs_075mt84qU7t2nzNQDHn6V/exec",
+        {
+          method: "POST",
+          body: formBody,
+        }
+      );
+
+      console.log("✅ Registration + Transaction saved (request sent):", payload);
+      try {
+        const text = await res.text();
+        console.log("Response text:", text);
+      } catch (e) {
+        console.log("Response could not be read:", e);
+      }
+    } catch (err) {
+      console.error("❌ Error saving data:", err);
+    }
+
+    setTimeout(() => setShowSuccess(true), 300);
+  };
+
+  const qrImage = isEarlyBird ? "/qr-early.jpeg" : "/qr-regular.jpeg";
 
   return (
     <div
@@ -46,7 +75,6 @@ function PaymentPage() {
         padding: "20px",
         background: "#0a0a0a",
         color: "white",
-        position: "relative",
       }}
     >
       <div
@@ -58,46 +86,46 @@ function PaymentPage() {
           maxWidth: "480px",
           width: "100%",
           textAlign: "center",
-          boxShadow: "0 0 40px rgba(0,0,0,0.3)",
         }}
       >
         {!showSuccess ? (
           <>
             <h2 style={{ marginBottom: "1rem" }}>Complete Your Payment</h2>
-
             <p style={{ fontSize: "1.1rem" }}>
               <strong>Amount:</strong> ₹{amount}
+              {isEarlyBird && (
+                <span style={{ color: "#00eaff", marginLeft: "5px" }}>
+                  (Early Bird Applied)
+                </span>
+              )}
             </p>
-
-            <p style={{ marginTop: "0.6rem" }}>
-              <strong>Your Unique Code:</strong>
-              <span
-                style={{
-                  color: "#00eaff",
-                  marginLeft: "8px",
-                  fontSize: "1.4rem",
-                }}
-              >
-                {code}
-              </span>
-            </p>
-
-            <p style={{ opacity: 0.8, fontSize: "0.95rem" }}>
-              Add this code in the UPI description.
-            </p>
-
             <img
-              src="/qr.png"
+              src={qrImage}
               alt="QR Code"
               style={{
                 width: "220px",
-                height: "220px",
+                height: "300px",
                 margin: "1.5rem auto",
                 display: "block",
                 borderRadius: "12px",
               }}
             />
-
+            <input
+              type="text"
+              placeholder="Enter your UPI Transaction ID"
+              value={transactionId}
+              onChange={(e) => setTransactionId(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "10px",
+                border: "1px solid rgba(255,255,255,0.3)",
+                background: "rgba(255,255,255,0.08)",
+                color: "white",
+                marginBottom: "1.2rem",
+                textAlign: "center",
+              }}
+            />
             <button
               onClick={openConfirm}
               style={{
@@ -120,8 +148,7 @@ function PaymentPage() {
             <SuccessAnimation />
             <h2 style={{ marginTop: "1rem" }}>Congratulations! 🎉</h2>
             <p style={{ opacity: 0.8, marginTop: "0.6rem" }}>
-              You're successfully registered!  
-              We'll reach out to you soon.
+              You're successfully registered! We’ll verify your payment soon.
             </p>
           </div>
         )}
@@ -132,7 +159,7 @@ function PaymentPage() {
           style={{
             position: "fixed",
             top: 0,
-            left:0,
+            left: 0,
             width: "100%",
             height: "100%",
             backdropFilter: "blur(5px)",
@@ -153,7 +180,6 @@ function PaymentPage() {
             }}
           >
             <h3>Are you sure you paid?</h3>
-
             <div style={{ marginTop: "1rem", display: "flex", gap: "10px" }}>
               <button
                 onClick={confirmPayment}
@@ -170,7 +196,6 @@ function PaymentPage() {
               >
                 Yes
               </button>
-
               <button
                 onClick={closeConfirm}
                 style={{

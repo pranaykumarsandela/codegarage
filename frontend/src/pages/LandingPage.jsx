@@ -2,10 +2,12 @@ import Hero from "../components/Hero";
 import Countdown from "../components/Countdown";
 import { useEffect } from "react";
 import "../styles/globals.css";
+import { EARLY_BIRD_END_DATE } from "../config/eventConfig";
+import { REGULAR_END_DATE } from "../config/eventConfig";
 
 function LandingPage() {
-  const earlyBirdDate = new Date("2025-12-31T23:59:59");
-  const registrationCloseDate = new Date("2026-01-15T23:59:59");
+  const earlyBirdDate = { EARLY_BIRD_END_DATE };
+  const registrationCloseDate = { REGULAR_END_DATE };
 
   const benefits = [
     "Structured learning pathway",
