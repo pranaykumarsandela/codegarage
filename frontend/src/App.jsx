@@ -4,7 +4,6 @@ import Navbar from "./components/Navbar";
 
 import LandingPage from "./pages/LandingPage";
 import RegistrationPage from "./pages/RegistrationPage";
-import PaymentPage from "./pages/PaymentPage";
 import SuccessPage from "./pages/SuccessPage";
 import ClosedPage from "./pages/ClosedPage";
 
@@ -24,7 +23,6 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/payment" element={<PaymentPage />} />   {/* Payment Page */}
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/closed" element={<ClosedPage />} />
         </Routes>
