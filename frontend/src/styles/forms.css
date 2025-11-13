@@ -257,40 +257,79 @@
 @media (max-width: 768px) {
   body, html {
     overflow-x: hidden !important;
+    height: 100%;
+  }
+
+  .form-container.centered {
+    padding: 0;
+    height: calc(100vh - 60px); /* Fit below navbar */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
   }
 
   .form-card {
-    max-height: 80vh;
-    margin: 10px 1px;
+    width: 100%;
+    max-width: 100%;
+    height: calc(100vh - 80px); /* prevents going below screen */
+    margin-top: 10px;
+    margin-bottom: 10px;
     padding: 1.4rem;
+    border-radius: 16px;
+
+    overflow-y: auto;             /* scroll ONLY inside small card */
+    -webkit-overflow-scrolling: touch;
   }
 
+  /* prevent jumpy long spacing */
   .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
   }
 
-  .form-label {
-    display: block;
-    margin-bottom: 0.4rem;
-    color: var(--text-primary);
-    font-size: 0.95rem;
+  .form-top-heading {
+    margin-bottom: 1.4rem !important;
+  }
+
+  .form-top-heading h2 {
+    font-size: 1.4rem;
   }
 
   .steps-wrapper {
     padding: 0 16px;
-    margin-top: 1.6rem;
-    margin-bottom: 2.4rem;
+    margin-top: 1rem;
+    margin-bottom: 1.4rem;
   }
 
   .steps-line,
   .steps-progress {
-    left: 38px !important;
-    right: 38px !important;
+    left: 35px !important;
+    right: 35px !important;
   }
 
   .step-dot {
-    width: 32px !important;
-    height: 32px !important;
+    width: 30px !important;
+    height: 30px !important;
     font-size: 0.75rem;
+  }
+
+  /* Inputs */
+  .form-input,
+  .form-select {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+
+  /* Buttons */
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.85rem;
+    font-size: 0.95rem;
+  }
+
+  /* Payment QR sizing */
+  img[alt="QR"],
+  img[src*="qr"] {
+    width: 180px !important;
+    height: 240px !important;
   }
 }
