@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import "../styles/hero.css";
 import "../styles/buttons.css";
 
+
 function Hero() {
   return (
     <section className="hero">
@@ -11,14 +12,18 @@ function Hero() {
         <div className="floating-element pink"></div>
       </div>
 
+
       <div className="hero-content">
         <div className="hero-subtitle">IEEE SB OUCE Computer Society Presents</div>
 
+
         <h1 className="hero-title gradient-text">Code Garage 2025</h1>
+
 
         <p className="hero-description">
           Structured learning, guided practice, and performance-driven growth.
         </p>
+
 
         <div className="hero-cta">
           <Link to="/register">
@@ -27,6 +32,7 @@ function Hero() {
             </button>
           </Link>
 
+
           <a href="#about">
              <button className="btn-primary btn-large">
               <span>Learn More</span>
@@ -34,25 +40,29 @@ function Hero() {
           </a>
         </div>
 
+
         <div className="hero-stats">
           <div className="stat-card glass">
             <div className="stat-value">3</div>
             <div className="stat-label">Learning Stages</div>
           </div>
 
+
           <div className="stat-card glass">
             <div className="stat-value">150+</div>
             <div className="stat-label">DSA Problems</div>
           </div>
 
+
           <div className="stat-card glass">
-            <div className="stat-value">6 months</div>
-            <div className="stat-label">program</div>
+            <div className="stat-value">6 </div>
+            <div className="stat-label">Months Program</div>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
 
 export default Hero;
