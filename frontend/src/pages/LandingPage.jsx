@@ -135,8 +135,7 @@ function LandingPage() {
           <div className="center-text mb-3">
             <h2 className="gradient-text mb-1">Key Benefits</h2>
             <p className="text-secondary">Everything you need to grow</p>
-          </div>
-          <div><p></p></div>
+          </div>          
           <div className="benefits-grid">
             {benefits.map((b, i) => (
   <div key={i} className="benefit-card glass hover-lift">
@@ -147,7 +146,7 @@ function LandingPage() {
           </div>
         </div>
       </section>
-      <Analytics />
+      <Analytics/>
     </div>
   );
 }
