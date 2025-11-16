@@ -216,3 +216,68 @@
 
 
 
+.contact-card {
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(0,0,0,0.10);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  margin-top: 1.5rem;
+}
+
+.contact-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(230,242,255,0.4);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 2px 12px rgba(168,85,247,0.10);
+  transition: box-shadow .3s;
+}
+.contact-person:hover {
+  box-shadow: 0 6px 24px rgba(6,182,212,0.15);
+}
+
+.contact-role {
+  font-weight: 700;
+  color: var(--neon-purple);
+  letter-spacing: 1px;
+  font-size: 1.13rem;
+  margin-bottom: 0.25rem;
+}
+
+.contact-name {
+  font-size: 1.05rem;
+  color: var(--text-main);
+  margin-bottom: 0.18rem;
+}
+
+.contact-phone {
+  font-size: 0.95rem;
+  /* color: var(--neon-cyan); */
+  font-family: 'Roboto Mono', monospace;
+  letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .contact-card {
+    padding: 1.6rem 0.9rem;
+  }
+  .contact-details {
+    gap: 1.15rem;
+  }
+  .contact-person {
+    padding: 0.7rem 0.8rem;
+  }
+}

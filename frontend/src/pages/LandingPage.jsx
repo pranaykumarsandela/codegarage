@@ -146,6 +146,28 @@ function LandingPage() {
           </div>
         </div>
       </section>
+    <section id="contact" style={{ padding: "1rem 0" }}>
+  <div className="container">
+    <div className="contact-card glass-strong hover-lift center-text">
+      <h2 className="gradient-text-yellow mb-1">For Any Queries</h2>
+      <p className="text-secondary mb-2">
+        Reach out to us for support or clarifications.
+      </p>
+      <div className="contact-details">
+        <div className="contact-person">
+          <span className="contact-role">Chairperson</span>
+          <span className="contact-name">Aila Kaushik</span>
+          <span className="contact-phone">6305112165</span>
+        </div>
+        <div className="contact-person">
+          <span className="contact-role">Vice Chair</span>
+          <span className="contact-name">Varsha</span>
+          <span className="contact-phone">9949062643</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
       <Analytics/>
     </div>
   );
