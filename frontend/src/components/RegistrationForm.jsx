@@ -10,7 +10,9 @@ function RegistrationForm({ onStateChange }) {
 
   // these must be defined before using inside useEffect
   const [showPayment, setShowPayment] = useState(false);
-  const [transactionId, setTransactionId] = useState("");
+  const [paymentImage, setPaymentImage] = useState(null);
+  const [paymentImagePreview, setPaymentImagePreview] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   const [data, setData] = useState({
@@ -119,32 +121,91 @@ function RegistrationForm({ onStateChange }) {
   };
 
   const submitPayment = async () => {
-    if (!/^[A-Za-z0-9]{10,30}$/.test(transactionId.trim())) {
-      alert("Enter a valid UPI Transaction ID");
+    if (!paymentImage) {
+      alert("Please upload a screenshot of your payment");
       return;
     }
 
-    const finalPayload = {
-      ...data,
-      discord: `https://discord.com/users/${data.discord}`,
-      leetcode: `https://leetcode.com/${data.leetcode}`,
-      github: `https://github.com/${data.github}`,
-      amount,
-      transactionId,
-    };
+    setUploading(true);
 
     try {
+      const formData = new FormData();
+      formData.append("file", paymentImage);
+      formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_PRESET || "codegarage_payments");
+      formData.append("cloud_name", import.meta.env.VITE_CLOUDINARY_NAME || "");
+
+      // Upload to Cloudinary
+      const cloudRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const cloudText = await cloudRes.text();
+      let cloudData = {};
+      try {
+        cloudData = JSON.parse(cloudText || "{}");
+      } catch (e) {
+        // Not JSON — keep cloudData empty and log raw text below
+      }
+
+      if (!cloudRes.ok) {
+        console.error("Cloudinary response status:", cloudRes.status, cloudText);
+        // Provide a helpful message for common misconfigurations
+        throw new Error(
+          `Cloudinary upload failed (status ${cloudRes.status}). Check your Cloudinary cloud name and unsigned upload preset. Response: ${cloudText}`
+        );
+      }
+
+      if (!cloudData.secure_url) {
+        throw new Error("No image URL returned");
+      }
+
+      // Prepare payload with image URL
+      const finalPayload = {
+        ...data,
+        discord: `https://discord.com/users/${data.discord}`,
+        leetcode: `https://leetcode.com/${data.leetcode}`,
+        github: `https://github.com/${data.github}`,
+        amount,
+        paymentImageUrl: cloudData.secure_url,
+      };
+
       const form = new URLSearchParams();
       Object.entries(finalPayload).forEach(([k, v]) => form.append(k, v));
 
-      await fetch("https://script.google.com/macros/s/AKfycbwZotioNMslv0v-kxum5aBKdDns_wmO6dqCbTPySrR477E6Tye5JeohaCCGQuRPMIEF/exec", {
-        method: "POST",
-        body: form,
-      });
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbwZotioNMslv0v-kxum5aBKdDns_wmO6dqCbTPySrR477E6Tye5JeohaCCGQuRPMIEF/exec",
+        {
+          method: "POST",
+          body: form,
+        }
+      );
 
       setPaymentSuccess(true);
     } catch (err) {
       console.error(err);
+      alert("Payment submission failed: " + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file");
+        return;
+      }
+      setPaymentImage(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setPaymentImagePreview(event.target?.result || "");
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -302,19 +363,44 @@ function RegistrationForm({ onStateChange }) {
             style={{ width: "220px", height: "300px", borderRadius: "12px", margin: "1rem auto" }}
           />
 
-          <input
-            type="text"
-            placeholder="Enter UPI Transaction ID"
-            className="form-input"
-            style={{ textAlign: "center" }}
-            value={transactionId}
-            onChange={(e) => setTransactionId(e.target.value)}
-          />
+          <div className="form-group" style={{ marginTop: "2rem" }}>
+            <label>Upload Payment Screenshot</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="form-input"
+              style={{ padding: "0.75rem" }}
+              disabled={uploading}
+            />
+            {paymentImagePreview && (
+              <div style={{ marginTop: "1rem" }}>
+                <p style={{ fontSize: "0.9rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Preview:</p>
+                <img
+                  src={paymentImagePreview}
+                  alt="Payment preview"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "200px",
+                    borderRadius: "8px",
+                    border: "2px solid var(--accent-yellow)",
+                  }}
+                />
+              </div>
+            )}
+          </div>
 
           <div className="form-actions">
-            <button type="button" onClick={back} className="btn-secondary">← Back</button>
-            <button type="button" className="btn-primary full" onClick={submitPayment}>
-              Done ✔
+            <button type="button" onClick={back} className="btn-secondary" disabled={uploading}>
+              ← Back
+            </button>
+            <button
+              type="button"
+              className={`btn-primary full ${!paymentImage || uploading ? "disabled" : ""}`}
+              onClick={submitPayment}
+              disabled={!paymentImage || uploading}
+            >
+              {uploading ? "Uploading..." : "Submit Payment ✔"}
             </button>
           </div>
         </div>
