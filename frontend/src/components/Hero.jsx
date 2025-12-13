@@ -17,7 +17,7 @@ function Hero() {
         <div className="hero-subtitle">IEEE SB OUCE Computer Society Presents</div>
 
 
-        <h1 className="hero-title gradient-text">Code Garage 2025</h1>
+        <h1 className="hero-title gradient-text">Code Garage 2026</h1>
 
 
         <p className="hero-description">
